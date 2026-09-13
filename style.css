@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --bg-1: #06141c;
+  --bg-2: #123245;
+  --panel: rgba(255, 255, 255, 0.045);
+  --panel-border: rgba(255, 255, 255, 0.09);
+  --display-bg: rgba(0, 0, 0, 0.45);
+
+  --amber: #ffb100;
+  --amber-dim: rgba(255, 177, 0, 0.16);
+  --amber-dim-hover: rgba(255, 177, 0, 0.28);
+
+  --teal: #5fd0c9;
+  --teal-dim: rgba(95, 208, 201, 0.13);
+  --teal-dim-hover: rgba(95, 208, 201, 0.24);
+
+  --violet: #9db4ff;
+  --violet-dim: rgba(157, 180, 255, 0.13);
+  --violet-dim-hover: rgba(157, 180, 255, 0.24);
+
+  --red: #ff8577;
+  --red-dim: rgba(255, 133, 119, 0.13);
+  --red-dim-hover: rgba(255, 133, 119, 0.24);
+
+  --text: #eef4f2;
+  --muted: #6f97a1;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at 20% 15%, var(--bg-2), var(--bg-1) 65%);
+  font-family: 'Inter', sans-serif;
+}
+
+/* The whole card is capped to a fraction of the viewport height (96vh),
+   so however short the window is, the calculator always fits without
+   scrolling. Width is capped the same way for narrow windows. */
+.calculator {
+  width: min(320px, 92vw);
+  height: min(660px, 96vh);
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  padding: clamp(8px, 2vh, 14px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55);
+}
+
+.display {
+  flex: 0 0 auto;
+  background: var(--display-bg);
+  border-radius: 12px;
+  padding: clamp(6px, 1.4vh, 10px) 12px;
+  text-align: right;
+  margin-bottom: clamp(6px, 1.2vh, 12px);
+}
+
+.indicator-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  min-height: 12px;
+  margin-bottom: 2px;
+}
+
+.indicator {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--amber);
+  opacity: 0.85;
+}
+
+.indicator.mem {
+  color: var(--violet);
+}
+
+.indicator.hidden {
+  visibility: hidden;
+}
+
+.history {
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--muted);
+  font-size: 0.75rem;
+  min-height: 15px;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.result {
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--text);
+  font-size: clamp(1.1rem, 3.2vh, 1.7rem);
+  font-weight: 600;
+  word-wrap: break-word;
+  word-break: break-all;
+  line-height: 1.2;
+}
+
+.history-log {
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  max-height: 34px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge/IE */
+}
+
+.history-log::-webkit-scrollbar {
+  display: none; /* Chrome, Brave, Edge, Safari */
+}
+
+.history-log:empty {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.history-item {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.history-item:hover {
+  color: var(--teal);
+}
+
+/* The button grid fills whatever vertical space is left after the
+   display (flex: 1), and its 10 rows are each 1fr — so every row
+   scales to fit, no matter the window height. */
+.buttons {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: clamp(4px, 0.9vh, 6px);
+}
+
+.btn {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  outline: none;
+  border-radius: 9px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.62rem, 1.7vh, 0.85rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:focus-visible {
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.btn.operator {
+  background: var(--amber-dim);
+  color: var(--amber);
+}
+.btn.operator:hover { background: var(--amber-dim-hover); }
+
+.btn.sci {
+  background: var(--teal-dim);
+  color: var(--teal);
+}
+.btn.sci:hover { background: var(--teal-dim-hover); }
+
+.btn.mem {
+  background: var(--violet-dim);
+  color: var(--violet);
+}
+.btn.mem:hover { background: var(--violet-dim-hover); }
+
+.btn.clear {
+  background: var(--red-dim);
+  color: var(--red);
+}
+.btn.clear:hover { background: var(--red-dim-hover); }
+
+.btn.mode {
+  background: rgba(255, 177, 0, 0.08);
+  color: var(--amber);
+  border: 1px solid rgba(255, 177, 0, 0.35);
+}
+
+.btn.equals {
+  background: var(--amber);
+  color: #1a1200;
+  font-weight: 700;
+}
+.btn.equals:hover { background: #ffc233; }
+
+.span-two {
+  grid-column: span 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+  .btn:hover { transform: none; }
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                     .history-log {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge/IE */
+}
+
+.history-log::-webkit-scrollbar {
+  display: none; /* Chrome, Brave, Edge, Safari */
+}
